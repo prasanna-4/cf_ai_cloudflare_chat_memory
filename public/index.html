@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cloudflare AI Chat (DO Memory)</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<main class="container">
+<h1>Cloudflare AI Chat</h1>
+<p class="muted">Workers AI + Durable Objects memory. Optional voice input/output.</p>
+
+
+<div class="row">
+<textarea id="input" rows="3" placeholder="Ask something…"></textarea>
+<div class="controls">
+<button id="send">Send</button>
+<button id="reset" class="ghost">Reset</button>
+<button id="mic" title="Hold to speak">🎤</button>
+<label class="switch"><input id="tts" type="checkbox" /> <span>Speak replies</span></label>
+</div>
+</div>
+
+
+<ul id="chat"></ul>
+</main>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
