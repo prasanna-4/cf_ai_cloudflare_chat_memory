@@ -1,64 +1,71 @@
-## System Prompt (Injected by Durable Object)
-```
-You are a concise assistant. Answer clearly. If user asks for code, return minimal runnable snippets. Maintain helpful tone.
-```
+This file documents the AI-assisted coding prompts used during the development of cf_ai_cloudflare_chat_memory.
+AI assistance was used to speed up development, clarify Cloudflare Workers APIs, and debug issues.
 
+🛠️ Setup & Environment
 
-## Prompting Notes while building
-- "Draft a Cloudflare Workers AI chat Worker using Durable Objects for memory."
-- "Add a simple HTML/JS UI with fetch('/api/chat'), streaming optional."
-- "Implement voice input via Web Speech API and speech output with SpeechSynthesis."
+Prompt:
 
+"Help me set up a Cloudflare Workers AI project with Durable Objects for memory. Show me the wrangler.toml structure."
 
-# PROMPTS.md
+Response:
+Provided wrangler.toml with [ai], [durable_objects], and [assets] sections.
 
-This file documents the AI prompts used during development of **cf_ai_cloudflare_chat_memory**.  
-Cloudflare requires this to demonstrate transparency in AI-assisted coding.
+📝 Durable Object (Memory) Implementation
 
----
+Prompt:
 
-## System Prompt (used in the app)
+"Write a Durable Object that stores conversation history, trims old turns, and passes messages to Workers AI."
 
-```ts
-const SYSTEM_PROMPT: Msg = {
-  role: 'system',
-  content:
-    'You are a concise assistant. Answer clearly. If user asks for code, return minimal runnable snippets. Maintain helpful tone.',
-};
+Response:
+Generated memory.ts including ChatSession Durable Object with history storage and trimming logic.
 
-This system prompt is injected into every conversation and ensures the assistant replies are clear, concise, and runnable.
+💬 API Endpoints
 
-Developer Prompts (used during building this repo)
-These are examples of prompts given to ChatGPT while building the application:
+Prompt:
 
-Setup Wrangler + Durable Object
+"Expose /api/chat, /api/history, and /api/reset endpoints in the worker to interact with the Durable Object."
 
-“Help me set up a Cloudflare Worker with Durable Objects to store chat history.”
+Response:
+Added fetch handlers in worker.ts routing requests to Durable Object.
 
-“How do I write wrangler.toml for Durable Objects and Workers AI?”
+🎨 Frontend (Chat UI)
 
-AI integration
+Prompt:
 
-“Write a Durable Object that takes user messages, adds system + history, calls Workers AI with env.AI.run, and stores the assistant’s response.”
+"Create a simple frontend with an input box, send/reset buttons, and optional voice input/output using the Web Speech API."
 
-Error fixing
+Response:
+Generated index.html, styles.css, and app.js supporting both text chat and voice features.
 
-“I am getting error: ‘Your Worker depends on the following Durable Objects, which are not exported…’ fix my worker.ts exports.”
+🐞 Debugging & Errors
 
-“How do I handle the error: ‘Incorrect type for Promise: the Promise did not resolve to Response’?”
+Prompt:
 
-Frontend
+"Fix error: Uncaught TypeError: the Promise did not resolve to Response in Cloudflare Worker."
+"Why am I seeing { error: 'ai_failed' } when calling Workers AI?"
 
-“Give me a minimal chat UI with input box, send button, and area to display responses. Add optional voice input/output.”
+Response:
+Guided corrections to return proper Response objects and updated AI model name from @cf/meta/llama-3.3-8b-instruct (non-existent) to @cf/meta/llama-3-8b-instruct (valid).
 
-README drafting
+🚀 Deployment
 
-“Write a README for my Cloudflare AI app, including setup, deploy, and architecture diagram.”
+Prompt:
 
-Notes
-The above are developer-facing prompts used while creating this app.
+"How do I deploy this to Cloudflare and get a public workers.dev link?"
 
-End users of the deployed app can type any prompt (questions, code requests, etc.), but those are not included here since they are not part of the development process.
+Response:
+Provided steps for wrangler login, wrangler whoami, and wrangler deploy.
 
+✅ Summary
 
----
+AI was used as a pair programmer to:
+
+Scaffold the Durable Object memory logic.
+
+Integrate Workers AI text generation.
+
+Add voice input/output to the frontend.
+
+Debug deployment and model configuration issues.
+
+All code was reviewed and tested before deployment.

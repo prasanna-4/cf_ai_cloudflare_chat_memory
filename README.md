@@ -1,89 +1,99 @@
-**Live demo:** https://cf_ai_cloudflare_chat_memory.ravikantilaxmiprasanna.workers.dev
-
 # cf_ai_cloudflare_chat_memory
 
+Live demo: 🌐 Try it here((https://cf_ai_cloudflare_chat_memory.ravikantilaxmiprasanna.workers.dev))
 
-A minimal AI-powered chat app on **Cloudflare Workers AI** with **Durable Objects memory** and an optional **voice input/output UI**. Built to satisfy Cloudflare's optional assignment requirements.
+A minimal AI-powered chat app built on Cloudflare Workers AI with Durable Objects memory and optional voice input/output.
+Created as part of the Cloudflare AI assignment.
 
+✅ Features
 
-## ✅ Requirements Coverage
-- **LLM:** Uses Workers AI (default: `@cf/meta/llama-3.3-8b-instruct`).
-- **Workflow / coordination:** Durable Object manages per-user conversation state + rate limiting.
-- **User input:** Web chat UI with optional voice input (Web Speech API) and speech output (SpeechSynthesis).
-- **Memory / state:** Conversation history stored in Durable Object `storage` (persisted per `sessionId`).
+LLM (Workers AI): Uses @cf/meta/llama-3-8b-instruct.
 
+Workflow / Coordination: Durable Object manages per-user conversation state and memory.
 
-## Quick Start
+User Input: Web chat UI with text, plus optional voice input (speech-to-text) and speech replies (text-to-speech) via the browser’s Web Speech API.
 
+Memory / State: Conversation history is persisted per session.
 
-### 1) Prereqs
-- Node 18+
-- `npm i -g wrangler` (Cloudflare CLI)
-- A Cloudflare account & a Workers AI-enabled account/zone.
+🚀 Quick Start
+1) Prerequisites
 
+Node.js 18+
 
-### 2) Install
-```bash
+Cloudflare account (with Workers + Workers AI enabled)
+
+Wrangler CLI:
+
+npm install -g wrangler
+
+2) Install
 npm install
-```
 
+3) Configure
 
-### 3) Configure
-Set your account details in `wrangler.toml`:
-```toml
-# Replace with your real account_id
+Edit your wrangler.toml and replace with your Cloudflare account_id:
+
 account_id = "YOUR_ACCOUNT_ID"
-```
 
 
-Optional: pick an AI model in `wrangler.toml` or via env var `AI_MODEL`.
+Set the AI model (default):
 
+AI_MODEL = "@cf/meta/llama-3-8b-instruct"
 
-### 4) Dev
-```bash
+4) Run locally
 npm run dev
-# open http://localhost:8787
-```
 
 
-### 5) Deploy
-```bash
+Open: http://localhost:8787
+
+5) Deploy
 npm run deploy
-```
-The command prints a production URL. Use that link in your submission.
 
 
-## Repo Checklist (for Cloudflare assignment)
-- Repository **name prefix**: `cf_ai_` ✅ (rename on GitHub if needed)
-- Contains **README.md** with run/deploy steps ✅
-- Contains **PROMPTS.md** with AI prompts used ✅
-- Clear way to try locally **and** a deployed link (post-deploy) ✅
+The deploy command will print your production URL.
+
+🖥️ Architecture
+Browser ⇄ Worker (API routes)
+│
+├── /api/chat    → Durable Object session → Workers AI (LLM)
+├── /api/history → Retrieve conversation history
+└── /api/reset   → Clear session history
 
 
-## Architecture
-- **Worker** (`src/worker.ts`): `/api/*` endpoints for chat/history/reset.
-- **Durable Object** (`src/memory.ts`): stores conversation turns, trims context, simple token budget.
-- **Frontend** (`public/`): lightweight chat UI with voice input/output (served automatically via Wrangler assets).
+Worker (src/worker.ts) – Handles API endpoints.
+
+Durable Object (src/memory.ts) – Stores and trims conversation history.
+
+Frontend (public/) – Chat UI with optional voice input/output.
+
+🎙️ Voice Support
+
+Voice Input: Uses the browser’s built-in SpeechRecognition API (Chrome recommended).
+
+Voice Output: Uses SpeechSynthesis API to speak replies aloud.
+
+No server cost – handled fully client-side.
+
+📂 Repo Checklist
+
+README.md ✅ (this file)
+
+PROMPTS.md ✅ (logs AI prompts used in building this project)
+
+Live deployed link ✅
+
+Repo name starts with cf_ai_ ✅
+
+📸 Screenshots
+
+Add your demo screenshots here (e.g. from workers.dev link).
+![alt text](image.png)
+
+Notes
+
+If @cf/meta/llama-3-8b-instruct is not available on your account, pick another model from:
+
+npx wrangler ai models
 
 
-```
-Browser ⇄ Worker (only /api/*)
-│ │
-│ /api/chat └──► Durable Object (per sessionId) ──► Workers AI (LLM)
-└─────────────◄─── stores + returns assistant reply
-```
-
-
-## Environment & Bindings
-`wrangler.toml` wires:
-- `AI` – Workers AI binding
-- `CHAT_SESSIONS` – Durable Object namespace
-- Static assets served from `public/` via `[assets]` (no manual code needed).
-
-
-## Notes
-- If `@cf/meta/llama-3.3-8b-instruct` is unavailable on your account, set `AI_MODEL` to a supported model (e.g., `@cf/meta/llama-3-8b-instruct` or any Workers AI instruct model).
-- Voice input uses **Web Speech API** (Chrome recommended). No server cost.
-
-
----
+Tested on Chrome (voice features).
